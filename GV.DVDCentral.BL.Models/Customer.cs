@@ -19,7 +19,7 @@ namespace GV.DVDCentral.BL.Models
         public string? City { get; set; }
 
         public string? State { get; set; }
-        public int Zip { get; set; }
+        public string? Zip { get; set; }
 
         public string? Phone { get; set; }
 

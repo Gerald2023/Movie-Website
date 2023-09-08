@@ -14,7 +14,7 @@ namespace GV.DVDCentral.BL.Models
         public int MovieId { get; set; }
         public int Quantity { get; set; }
 
-        public double Cost { get; set; }
+        public decimal Cost { get; set; }
 
 
     }
