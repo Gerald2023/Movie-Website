@@ -7,6 +7,6 @@
 	[City] VARCHAR(50) NOT NULL,
 	[State] VARCHAR(2) NOT NULL,
 	[Zip] VARCHAR(5) NOT NULL,
-	[Phone] VARCHAR(10) NOT NULL,
+	[Phone] VARCHAR(12) NOT NULL,
 	[UserId] INT NOT NULL
 )

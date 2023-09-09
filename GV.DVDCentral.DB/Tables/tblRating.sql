@@ -1,5 +1,5 @@
-﻿CREATE TABLE [dbo].[tblItem]
+﻿CREATE TABLE [dbo].[tblRating]
 (
-	[Id] INT NOT NULL PRIMARY KEY,
-	[Description] VARCHAR(50) NOT NULL
+	[Id] INT NOT NULL PRIMARY KEY, 
+    [Description] VARCHAR(50) NOT NULL
 )
