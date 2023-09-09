@@ -85,6 +85,7 @@
     <None Include="PostDeploy\DefaultData\OrderItems.sql" />
     <None Include="PostDeploy\DefaultData\Ratings.sql" />
     <None Include="PostDeploy\DefaultData\Users.sql" />
+    <None Include="remote.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="PreDeploy\Script.PreDeployment1.sql" />
