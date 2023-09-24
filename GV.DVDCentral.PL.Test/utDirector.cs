@@ -1,23 +1,42 @@
+
 namespace GV.DVDCentral.PL.Test
 {
     [TestClass]
     public class utDirector
     {
-        
+        //Modular or class level scope
+        protected DVDCentralEntities dc;// Declared it. It is intantiated it on line 14. 
+        protected IDbContextTransaction transaction; 
+
+        [TestInitialize] // This is a method attribute, it is used to set up for the test.  It is run before each test.
+        public void Initialize()
+        {
+            dc = new DVDCentralEntities(); // Instantiated from protected DVDCentralEntities di;
+            transaction  = dc.Database.BeginTransaction();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            transaction.Rollback();
+            transaction.Dispose(); // to clean the memory
+            dc = null;
+        }
+
+
 
         [TestMethod]
         public void LoadTest()
         {
-            DVDCentralEntities di = new DVDCentralEntities(); // This is a new instance of the DVDCentralEntities
-            
-            Assert.AreEqual(3, di.tblDirectors.Count()); //Assert means Test(I'm gonna test something) // di.tblDirectors is select * from tblDirectors
+            //DVDCentralEntities dc = new DVDCentralEntities(); // This is a new instance of the DVDCentralEntities
+            Assert.AreEqual(3, dc.tblDirectors.Count()); //Assert means Test(I'm gonna test something) // di.tblDirectors is select * from tblDirectors
 
         }
 
         [TestMethod]
         public void InsertTest()
         {
-            DVDCentralEntities di = new DVDCentralEntities(); // This is a new instance of the DVDCentralEntities
+           // DVDCentralEntities di = new DVDCentralEntities(); // This is a new instance of the DVDCentralEntities
 
             //Make an entity 
 
@@ -27,11 +46,11 @@ namespace GV.DVDCentral.PL.Test
             entity.LastName = "Vallejos";
 
             //add the entity to the database
-            di.tblDirectors.Add(entity);
+            dc.tblDirectors.Add(entity);
 
             //commit the changes (insert a record)
 
-            int result = di.SaveChanges(); //di.SaveChanges();
+            int result = dc.SaveChanges(); //dc.SaveChanges();
             Assert.AreEqual(1, result);
 
         }
@@ -41,6 +60,14 @@ namespace GV.DVDCentral.PL.Test
         [TestMethod]
         public void UpdateTest()
         {
+            tblDirector entity = dc.tblDirectors.FirstOrDefault();
+
+            //change property values
+            entity.FirstName = "Gabriel";
+            entity.LastName = "Gonzalez";
+
+            int result = dc.SaveChanges();
+            Assert.IsTrue(result > 0);
 
         }
 
