@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GV.DVDCentral.BL.Models
 {
-    internal class Format
+    public class Format
     {
         public int Id { get; set; }
         public string? Description { get; set; }
