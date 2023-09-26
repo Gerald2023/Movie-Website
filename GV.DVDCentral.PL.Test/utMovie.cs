@@ -43,7 +43,7 @@ namespace GV.DVDCentral.PL.Test
             entity.Id = -99;
             entity.Title = "The Fight Club";
             entity.Descripition = "Rule1. You do not talk about the fight club";
-            entity.Cost = 23; //To do: Fix the datatype of cost to double or  float on dbo.tblMovie. Then change recreate the local 
+            entity.Cost = 20.5m; //To do: Fix the datatype of cost to double or  float on dbo.tblMovie. Then change recreate the local 
             entity.RatingId = -99;
             entity.FormatId = -99;
             entity.DirectorId = -99;
@@ -64,16 +64,32 @@ namespace GV.DVDCentral.PL.Test
 
 
 
+        
         [TestMethod]
         public void UpdateTest()
         {
+            tblMovie entity = dc.tblMovies.FirstOrDefault();
+
+            //change property values
+            entity.Title = "Changed the title of this movie";
+            entity.Descripition = "Changed the description of this movie";
+
+
+            int result = dc.SaveChanges();
+            Assert.IsTrue(result > 0);
 
         }
 
         [TestMethod]
         public void DeleteTest()
         {
+          
+            tblMovie entity = dc.tblMovies.Where(e => e.Id == 2).FirstOrDefault();
 
+            //remove the entity
+            dc.tblMovies.Remove(entity);
+            int result = dc.SaveChanges();
+            Assert.AreNotEqual(result, 0);
         }
     }
 }

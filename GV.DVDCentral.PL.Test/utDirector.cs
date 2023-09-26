@@ -60,6 +60,7 @@ namespace GV.DVDCentral.PL.Test
         [TestMethod]
         public void UpdateTest()
         {
+            // select * from tblDirector
             tblDirector entity = dc.tblDirectors.FirstOrDefault();
 
             //change property values
@@ -74,7 +75,13 @@ namespace GV.DVDCentral.PL.Test
         [TestMethod]
         public void DeleteTest()
         {
+            // select * from tblDirector
+            tblDirector entity = dc.tblDirectors.Where(e=>e.Id ==3).FirstOrDefault();
 
+            //remove the entity
+            dc.tblDirectors.Remove(entity);
+            int result = dc.SaveChanges();
+            Assert.AreNotEqual(result, 0);
         }
 
     }

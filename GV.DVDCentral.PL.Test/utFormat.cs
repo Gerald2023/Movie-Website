@@ -60,6 +60,15 @@ namespace GV.DVDCentral.PL.Test
         [TestMethod]
         public void UpdateTest()
         {
+            tblFormat entity = dc.tblFormats.FirstOrDefault();
+
+            //change property values
+            entity.Description = "changed data for testing";
+            
+
+
+            int result = dc.SaveChanges();
+            Assert.IsTrue(result > 0);
 
         }
 
@@ -67,6 +76,13 @@ namespace GV.DVDCentral.PL.Test
         public void DeleteTest()
         {
 
+            tblFormat entity = dc.tblFormats.Where(e => e.Id == 2).FirstOrDefault();
+
+            //remove the entity
+            dc.tblFormats.Remove(entity);
+            int result = dc.SaveChanges();
+            Assert.AreNotEqual(result, 0);
         }
+
     }
 }

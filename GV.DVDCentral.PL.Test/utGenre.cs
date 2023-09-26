@@ -58,13 +58,27 @@ namespace GV.DVDCentral.PL.Test
         [TestMethod]
         public void UpdateTest()
         {
+       
+            tblGenre entity = dc.tblGenres.FirstOrDefault();
+
+            //change property values
+            entity.Description = "This is updated test data";
+
+            int result = dc.SaveChanges();
+            Assert.IsTrue(result > 0);
 
         }
 
         [TestMethod]
         public void DeleteTest()
         {
+            // select * from tblDirector
+            tblGenre entity = dc.tblGenres.Where(e => e.Id == 1).FirstOrDefault();
 
+            //remove the entity
+            dc.tblGenres.Remove(entity);
+            int result = dc.SaveChanges();
+            Assert.AreNotEqual(result, 0);
         }
 
     }
