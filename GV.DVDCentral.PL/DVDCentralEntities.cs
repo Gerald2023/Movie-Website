@@ -43,7 +43,7 @@ public partial class DVDCentralEntities : DbContext
     {
         modelBuilder.Entity<tblCustomer>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tblCusto__3214EC07F5B69D3C");
+            entity.HasKey(e => e.Id).HasName("PK__tblCusto__3214EC07E53E015F");
 
             entity.ToTable("tblCustomer");
 
@@ -66,14 +66,14 @@ public partial class DVDCentralEntities : DbContext
             entity.Property(e => e.State)
                 .HasMaxLength(2)
                 .IsUnicode(false);
-            entity.Property(e => e.Zip)
+            entity.Property(e => e.ZIP)
                 .HasMaxLength(5)
                 .IsUnicode(false);
         });
 
         modelBuilder.Entity<tblDirector>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tblDirec__3214EC07C67BE481");
+            entity.HasKey(e => e.Id).HasName("PK__tblDirec__3214EC07C6733335");
 
             entity.ToTable("tblDirector");
 
@@ -88,7 +88,7 @@ public partial class DVDCentralEntities : DbContext
 
         modelBuilder.Entity<tblFormat>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tblForma__3214EC070353F4BA");
+            entity.HasKey(e => e.Id).HasName("PK__tblForma__3214EC07A201E1F7");
 
             entity.ToTable("tblFormat");
 
@@ -100,7 +100,7 @@ public partial class DVDCentralEntities : DbContext
 
         modelBuilder.Entity<tblGenre>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tblGenre__3214EC07AF069332");
+            entity.HasKey(e => e.Id).HasName("PK__tblGenre__3214EC07F4ACACB9");
 
             entity.ToTable("tblGenre");
 
@@ -112,13 +112,12 @@ public partial class DVDCentralEntities : DbContext
 
         modelBuilder.Entity<tblMovie>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tblMovie__3214EC07CDCD7736");
+            entity.HasKey(e => e.Id).HasName("PK__tblMovie__3214EC072FD43CFE");
 
             entity.ToTable("tblMovie");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Cost).HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.Descripition)
+            entity.Property(e => e.Description)
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.ImagePath)
@@ -131,7 +130,7 @@ public partial class DVDCentralEntities : DbContext
 
         modelBuilder.Entity<tblMovieGenre>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tblMovie__3214EC07B653619E");
+            entity.HasKey(e => e.Id).HasName("PK__tblMovie__3214EC077010759E");
 
             entity.ToTable("tblMovieGenre");
 
@@ -140,7 +139,7 @@ public partial class DVDCentralEntities : DbContext
 
         modelBuilder.Entity<tblOrder>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tblOrder__3214EC079CC367EA");
+            entity.HasKey(e => e.Id).HasName("PK__tblOrder__3214EC07760500A2");
 
             entity.ToTable("tblOrder");
 
@@ -151,17 +150,16 @@ public partial class DVDCentralEntities : DbContext
 
         modelBuilder.Entity<tblOrderItem>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tblOrder__3214EC075608087F");
+            entity.HasKey(e => e.Id).HasName("PK__tblOrder__3214EC07C957F420");
 
             entity.ToTable("tblOrderItem");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Cost).HasColumnType("decimal(18, 2)");
         });
 
         modelBuilder.Entity<tblRating>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tblRatin__3214EC07D1E8A0C8");
+            entity.HasKey(e => e.Id).HasName("PK__tblRatin__3214EC07609FE1F4");
 
             entity.ToTable("tblRating");
 
@@ -173,7 +171,7 @@ public partial class DVDCentralEntities : DbContext
 
         modelBuilder.Entity<tblUser>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tblUser__3214EC073BC103F1");
+            entity.HasKey(e => e.Id).HasName("PK__tblUser__3214EC07D4C8DFB2");
 
             entity.ToTable("tblUser");
 
