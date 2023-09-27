@@ -1,22 +1,43 @@
 ﻿using GV.DVDCentral.BL.Models;
 using GV.DVDCentral.PL;
-using Microsoft.SqlServer.Server;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace GV.DVDCentral.BL
 {
     public static class MovieManager
     {
-        public static int Insert()
+        public static int Insert(string title, 
+                                string description,
+                                double cost,
+                                int ratingId,
+                                int directorId,
+                                int formatId,
+                                int inStkQty,
+                                string imagePath,
+                                ref int id,
+                                bool rollback = false)
         {
             try
             {
-                return 0;
+                Movie movie = new Movie();
+                {
+                    movie.Title = title;
+                    movie.Description = description;
+                    movie.Cost = cost;
+                    movie.RatingId = ratingId;
+                    movie.FormatId = formatId;
+                    movie.DirectorId = directorId;
+                    movie.InStkQty = inStkQty;
+                    movie.ImagePath = imagePath;
+
+                };
+
+                int results = Insert(movie, rollback);
+
+                //IMPORTANT - BACKFILL THE REFERENCE ID
+                id = movie.Id;
+
+                return results;
             }
             catch (Exception)
             {
@@ -26,11 +47,80 @@ namespace GV.DVDCentral.BL
 
         }
 
-        public static int Update()
+        public static int Insert(Movie movie, bool rollback = false)
+        {
+
+
+            try
+            {
+                int results = 0;
+
+                using (DVDCentralEntities dc = new DVDCentralEntities())
+                {
+                    IDbContextTransaction transaction = null;
+                    if (rollback) transaction = dc.Database.BeginTransaction();
+
+                    tblMovie entity = new tblMovie();
+                    entity.Id = dc.tblMovies.Any() ? dc.tblMovies.Max(m => m.Id) + 1 : 1;
+
+                    entity.Title = movie.Title;
+                    entity.Description = movie.Description;
+                    entity.Cost = movie.Cost;
+                    entity.RatingId = movie.RatingId;
+                    entity.FormatId = movie.FormatId;
+                    entity.DirectorId = movie.DirectorId;
+                    entity.InStkQty = movie.InStkQty;
+                    entity.ImagePath = movie.ImagePath;
+
+
+
+                    //IMPORTANT - BACK FILL THE ID
+                    movie.Id = entity.Id;
+
+                    dc.tblMovies.Add(entity);
+                    results = dc.SaveChanges();
+
+                    if (rollback) transaction.Rollback();
+                }
+
+                return results;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static int Update(Movie movie, bool rollback = false)
         {
             try
             {
-                return 0;
+                int results = 0;
+                using (DVDCentralEntities dc = new DVDCentralEntities()) //blocked scope
+                {
+                    IDbContextTransaction transaction = null;
+                    if (rollback) transaction = dc.Database.BeginTransaction();
+
+
+                    //Get the row that we are trying to update
+                    tblMovie entity = dc.tblMovies.FirstOrDefault(m => m.Id == movie.Id);
+
+                    if (entity != null)
+                    {
+                        entity.Title = movie.Title;
+                        entity.Description = movie.Description;
+
+
+                        results = dc.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new Exception("Row does not exist");
+                    }
+                    if (rollback) transaction.Rollback();
+
+                }
+                return results;
             }
             catch (Exception)
             {
@@ -42,18 +132,42 @@ namespace GV.DVDCentral.BL
         }
 
 
-        public static int Delete()
+        public static int Delete(int id, bool rollback = false)
         {
+
 
             try
             {
-                return 0;
+                int results = 0;
+                using (DVDCentralEntities dc = new DVDCentralEntities()) //blocked scope
+                {
+                    IDbContextTransaction transaction = null;
+                    if (rollback) transaction = dc.Database.BeginTransaction();
+
+
+                    //Get the row that we are trying to delete
+                    tblMovie entity = dc.tblMovies.FirstOrDefault(m => m.Id == id);
+
+                    if (entity != null)
+                    {
+                        dc.tblMovies.Remove(entity);
+                        results = dc.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new Exception("Row does not exist");
+                    }
+                    if (rollback) transaction.Rollback();
+
+                }
+                return results;
             }
             catch (Exception)
             {
 
                 throw;
             }
+
 
 
         }
@@ -62,7 +176,35 @@ namespace GV.DVDCentral.BL
         {
             try
             {
-                return null;
+
+
+                using (DVDCentralEntities dc = new DVDCentralEntities())
+                {
+                    tblMovie entity = dc.tblMovies.FirstOrDefault(d => d.Id == id);
+                    if (entity != null)
+                    {
+                        return new Movie
+                        {
+
+                           Id = entity.Id,
+                           Title = entity.Title,
+                           Description = entity.Description,
+                           Cost = entity.Cost,
+                           RatingId = entity.RatingId,
+                           FormatId = entity.FormatId,
+                           DirectorId = entity.DirectorId,
+                           InStkQty = entity.InStkQty,
+                           ImagePath = entity.ImagePath
+
+                         
+                        };
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
+
             }
             catch (Exception)
             {
@@ -87,24 +229,26 @@ namespace GV.DVDCentral.BL
                          m.Description,
                          m.Cost,
                          m.RatingId,
-                         m.FormatId,
+                         m.FormatId, 
                          m.DirectorId,
                          m.InStkQty,
-                         m.ImagePath
+                         m.ImagePath,
 
                      })
                      .ToList()
-                     .ForEach(format => list.Add(new Movie
+                     .ForEach(movie => list.Add(new Movie
                      {
-                         Id = format.Id,
-                         Title = format.Title,
-                         Description = format.Description,
-                         Cost = format.Cost,
-                         RatingId = format.RatingId,
-                         FormatId = format.FormatId,
-                         DirectorId = format.DirectorId,
-                         InStkQty = format.InStkQty,
-                         ImagePath = format.ImagePath
+                         
+                         Id = movie.Id,
+                         Title = movie.Title,
+                         Description = movie.Description,
+                         Cost = movie.Cost,
+                         RatingId = movie.RatingId,
+                         FormatId = movie.FormatId,
+                         DirectorId = movie.DirectorId,
+                         InStkQty = movie.InStkQty,
+                         ImagePath = movie.ImagePath
+
 
                      }));
                 }

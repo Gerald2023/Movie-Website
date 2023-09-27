@@ -1,20 +1,29 @@
 ﻿using GV.DVDCentral.BL.Models;
 using GV.DVDCentral.PL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace GV.DVDCentral.BL
 {
     public static class RatingManager
     {
-        public static int Insert()
+        public static int Insert(string description, 
+                                 ref int id, 
+                                 bool rollback = false)
         {
             try
             {
-                return 0;
+                Rating rating = new Rating();
+                {
+                    rating.Description = description;
+
+                };
+
+                int results = Insert(rating, rollback);
+
+                //IMPORTANT - BACKFILL THE REFERENCE ID
+                id = rating.Id;
+
+                return results;
             }
             catch (Exception)
             {
@@ -24,11 +33,73 @@ namespace GV.DVDCentral.BL
 
         }
 
-        public static int Update()
+        public static int Insert(Rating rating, bool rollback = false)
+        {
+
+
+            try
+            {
+                int results = 0;
+
+                using (DVDCentralEntities dc = new DVDCentralEntities())
+                {
+                    IDbContextTransaction transaction = null;
+                    if (rollback) transaction = dc.Database.BeginTransaction();
+
+                    tblRating entity = new tblRating();
+                    entity.Id = dc.tblRatings.Any() ? dc.tblRatings.Max(s => s.Id) + 1 : 1;
+
+                    entity.Description = rating.Description;
+
+
+                    //IMPORTANT - BACK FILL THE ID
+                    rating.Id = entity.Id;
+
+                    dc.tblRatings.Add(entity);
+                    results = dc.SaveChanges();
+
+                    if (rollback) transaction.Rollback();
+                }
+
+                return results;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static int Update(Rating rating, bool rollback = false)
         {
             try
             {
-                return 0;
+                int results = 0;
+                using (DVDCentralEntities dc = new DVDCentralEntities()) //blocked scope
+                {
+                    IDbContextTransaction transaction = null;
+                    if (rollback) transaction = dc.Database.BeginTransaction();
+
+
+                    //Get the row that we are trying to update
+                    tblRating entity = dc.tblRatings.FirstOrDefault(s => s.Id == rating.Id);
+
+                    if (entity != null)
+                    {
+                        entity.Id = rating.Id;
+                        entity.Description = rating.Description;
+
+
+
+                        results = dc.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new Exception("Row does not exist");
+                    }
+                    if (rollback) transaction.Rollback();
+
+                }
+                return results;
             }
             catch (Exception)
             {
@@ -40,18 +111,42 @@ namespace GV.DVDCentral.BL
         }
 
 
-        public static int Delete()
+        public static int Delete(int id, bool rollback = false)
         {
+
 
             try
             {
-                return 0;
+                int results = 0;
+                using (DVDCentralEntities dc = new DVDCentralEntities()) //blocked scope
+                {
+                    IDbContextTransaction transaction = null;
+                    if (rollback) transaction = dc.Database.BeginTransaction();
+
+
+                    //Get the row that we are trying to delete
+                    tblRating entity = dc.tblRatings.FirstOrDefault(r => r.Id == id);
+
+                    if (entity != null)
+                    {
+                        dc.tblRatings.Remove(entity);
+                        results = dc.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new Exception("Row does not exist");
+                    }
+                    if (rollback) transaction.Rollback();
+
+                }
+                return results;
             }
             catch (Exception)
             {
 
                 throw;
             }
+
 
 
         }
@@ -60,7 +155,27 @@ namespace GV.DVDCentral.BL
         {
             try
             {
-                return null;
+
+
+                using (DVDCentralEntities dc = new DVDCentralEntities())
+                {
+                    tblRating entity = dc.tblRatings.FirstOrDefault(r => r.Id == id);
+                    if (entity != null)
+                    {
+                        return new Rating
+                        {
+
+                            Id = entity.Id,
+                            Description = entity.Description
+
+                        };
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
+
             }
             catch (Exception)
             {
@@ -85,10 +200,10 @@ namespace GV.DVDCentral.BL
 
                      })
                      .ToList()
-                     .ForEach(format => list.Add(new Rating
+                     .ForEach(rating => list.Add(new Rating
                      {
-                         Id = format.Id,
-                         Description = format.Description
+                         Id = rating.Id,
+                         Description = rating.Description
 
                      }));
                 }

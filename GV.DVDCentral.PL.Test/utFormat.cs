@@ -84,5 +84,11 @@ namespace GV.DVDCentral.PL.Test
             Assert.AreNotEqual(result, 0);
         }
 
+        [TestMethod]
+        public void LoadByIdTest()
+        {
+            tblFormat entity = dc.tblFormats.Where(e => e.Id == 2).FirstOrDefault();
+            Assert.AreEqual(entity.Id, 2);
+        }
     }
 }

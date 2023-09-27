@@ -15,8 +15,7 @@ namespace GV.DVDCentral.BL.Models
 
         public string? Description { get; set; }
 
-        public double Cost { get; set; } // Decimal or decimal? 
-
+        public double Cost { get; set; } 
         public int  RatingId { get; set; }
 
         public int FormatId { get; set; }

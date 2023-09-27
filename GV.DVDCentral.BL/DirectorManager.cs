@@ -1,34 +1,145 @@
-﻿using GV.DVDCentral.PL;
-using GV.DVDCentral.BL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GV.DVDCentral.BL.Models;
+using GV.DVDCentral.PL;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace GV.DVDCentral.BL
 {
     public static class DirectorManager
     {
-        public static int Insert()
+        public static int Insert(string firstName, string lasName, ref int id, bool rollback = false)
         {
             try
             {
-                return 0;
+                Director director = new Director();
+                {
+                    director.FirstName = firstName;
+                    director.LastName = lasName;
+                    director.Id = id; 
+                };
+
+                int results = Insert(director, rollback);
+
+                //IMPORTANT - BACKFILL THE REFERENCE ID
+                id = director.Id;
+
+                return results;
             }
             catch (Exception)
             {
 
                 throw;
             }
+            
+        }
+
+        public static int Insert(Director director, bool rollback = false)
+        {
+
+
+            try
+            {
+                int results = 0;
+
+                using (DVDCentralEntities dc = new DVDCentralEntities())
+                {
+                    IDbContextTransaction transaction = null;
+                    if (rollback) transaction = dc.Database.BeginTransaction();
+
+                    tblDirector entity = new tblDirector();
+                    entity.Id = dc.tblDirectors.Any() ? dc.tblDirectors.Max(s => s.Id) + 1 : 1;
+
+                    entity.FirstName = director.FirstName;
+                    entity.LastName = director.LastName;
+
+
+                    //IMPORTANT - BACK FILL THE ID
+                    director.Id = entity.Id;
+
+                    dc.tblDirectors.Add(entity);
+                    results = dc.SaveChanges();
+
+                    if (rollback) transaction.Rollback();
+                }
+
+                return results;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static int Update(Director director, bool rollback = false)
+        {
+            try
+            {
+                int results = 0; 
+                using (DVDCentralEntities dc = new DVDCentralEntities()) //blocked scope
+                {
+                    IDbContextTransaction transaction = null;
+                    if (rollback) transaction = dc.Database.BeginTransaction();
+
+
+                    //Get the row that we are trying to update
+                    tblDirector entity = dc.tblDirectors.FirstOrDefault(s => s.Id == director.Id);
+
+                    if (entity != null)
+                    {
+                        entity.Id = director.Id;
+                        entity.FirstName = director.FirstName;
+                        entity.LastName = director.LastName;
+
+
+                        results = dc.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new Exception("Row does not exist");
+                    }
+                    if (rollback) transaction.Rollback();
+
+                }
+                return results;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
 
         }
 
-        public static int Update()
+
+        public static int Delete(int id, bool rollback = false)
         {
+
+
             try
             {
-                return 0;
+                int results = 0;
+                using (DVDCentralEntities dc = new DVDCentralEntities()) //blocked scope
+                {
+                    IDbContextTransaction transaction = null;
+                    if (rollback) transaction = dc.Database.BeginTransaction();
+
+
+                    //Get the row that we are trying to delete
+                    tblDirector entity = dc.tblDirectors.FirstOrDefault(s => s.Id == id);
+
+                    if (entity != null)
+                    {
+                        dc.tblDirectors.Remove(entity);
+                        results = dc.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new Exception("Row does not exist");
+                    }
+                    if (rollback) transaction.Rollback();
+
+                }
+                return results;
             }
             catch (Exception)
             {
@@ -36,22 +147,6 @@ namespace GV.DVDCentral.BL
                 throw;
             }
 
-
-        }
-
-
-        public static int Delete()
-        {
-
-            try
-            {
-                return 0;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
 
 
         }
@@ -60,7 +155,27 @@ namespace GV.DVDCentral.BL
         {
             try
             {
-                return null;
+
+
+                using (DVDCentralEntities dc = new DVDCentralEntities())
+                {
+                    tblDirector entity = dc.tblDirectors.FirstOrDefault(d => d.Id == id);
+                    if (entity != null)
+                    {
+                        return new Director
+                        {
+
+                            Id = entity.Id,
+                            FirstName = entity.FirstName,
+                            LastName = entity.LastName,
+                        };
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
+
             }
             catch (Exception)
             {
@@ -84,15 +199,13 @@ namespace GV.DVDCentral.BL
                          d.FirstName,
                          d.LastName
                          
-
-
                      })
                      .ToList()
-                     .ForEach(format => list.Add(new Director
+                     .ForEach(director => list.Add(new Director
                      {
-                        Id = format.Id,
-                        FirstName = format.FirstName,
-                        LastName = format.LastName
+                        Id = director.Id,
+                        FirstName = director.FirstName,
+                        LastName = director.LastName
 
                      }));
                 }
