@@ -18,6 +18,8 @@ namespace GV.DVDCentral.BL.Models
 
         public DateTime ShipDate { get; set; }
 
+        public List<OrderItem> OrderItems { get; set; }
+
 
     }
 }
