@@ -1,6 +1,6 @@
 ﻿BEGIN
 
-INSERT INTO tblCustomer(Id, FirstName, LastName, Address, City, State, Zip, Phone, UserId)
+INSERT INTO tblCustomer(Id, FirstName, LastName, Address, City, State, ZIP, Phone, UserId)
 VALUES
     (1, 'John', 'Doe', '123 Main St', 'Los Angeles', 'CA', '90001', '9201234567', 1),
     (2, 'Jane', 'Smith', '456 Elm St', 'New York', 'NY', '10001', '5559876543', 2),
