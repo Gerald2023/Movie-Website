@@ -6,4 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GV.DVDCentral.BL.Models\GV.DVDCentral.BL.Models.csproj" />
+    <ProjectReference Include="..\GV.DVDCentral.BL\GV.DVDCentral.BL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.10" />
+  </ItemGroup>
+
 </Project>

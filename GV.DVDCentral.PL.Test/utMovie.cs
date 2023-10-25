@@ -22,6 +22,32 @@ namespace GV.DVDCentral.PL.Test
             dc = null;
         }
 
+        [TestMethod]
+
+        public void LoadJoin (){
+
+            var movies = (from m in dc.tblMovies
+                          join r in dc.tblRatings on m.RatingId equals r.Id
+                          join f in dc.tblFormats on m.FormatId equals f.Id
+                          join d in dc.tblDirectors on m.DirectorId equals d.Id
+                          select new {
+
+                              m.Title,
+                              m.Cost,
+                              Quantity = m.InStkQty,
+                              Rating = r.Description,
+                              Format = f.Description,
+                              Director = d.FirstName + " " + d.LastName
+                             
+
+
+
+
+                          }).ToList();
+            
+            Assert.AreEqual(3, movies.Count());
+
+        }
 
 
         [TestMethod]

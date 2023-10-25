@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,11 +23,15 @@ namespace GV.DVDCentral.BL.Models
 
         public int DirectorId { get; set; }
 
+        
         public int InStkQty { get; set; }
 
         public string? ImagePath { get; set; }
 
-
-
+        [DisplayName("Director")]
+        public string? DirectorFullName { get; set; }
+        public int Quantity { get; set; }
+        public string Rating { get; set; }
+        public string Format { get; set; }
     }
 }
