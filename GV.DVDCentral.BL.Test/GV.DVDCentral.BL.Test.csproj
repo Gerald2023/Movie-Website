@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GV.DVDCentral.BL.Models\GV.DVDCentral.BL.Models.csproj" />
     <ProjectReference Include="..\GV.DVDCentral.BL\GV.DVDCentral.BL.csproj" />
+    <ProjectReference Include="..\GV.DVDCentral.DB\GV.DVDCentral.DB.sqlproj" />
   </ItemGroup>
 
 </Project>

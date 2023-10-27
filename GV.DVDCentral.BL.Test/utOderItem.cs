@@ -18,6 +18,13 @@ namespace GV.DVDCentral.BL.Test
             Assert.AreEqual(1, results);
         }
 
+        [TestMethod] 
+        public void LoadByOrderIdTest()
+        {
+            int orderId = OrderItemManager.Load().FirstOrDefault().OrderId;
+            Assert.IsTrue(OrderItemManager.LoadByOderId(orderId).Count > 0);
+        }
+
         [TestMethod]
         public void InsertTest2()
         {

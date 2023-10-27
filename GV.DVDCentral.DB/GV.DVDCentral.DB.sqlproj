@@ -74,7 +74,6 @@
     <Build Include="Tables\tblRating.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="local.publish.xml" />
     <None Include="PostDeploy\DefaultData\Customers.sql" />
     <None Include="PostDeploy\DefaultData\Directors.sql" />
     <None Include="PostDeploy\DefaultData\Formats.sql" />
@@ -86,6 +85,7 @@
     <None Include="PostDeploy\DefaultData\Ratings.sql" />
     <None Include="PostDeploy\DefaultData\Users.sql" />
     <None Include="remote.publish.xml" />
+    <None Include="local.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="PreDeploy\Script.PreDeployment1.sql" />

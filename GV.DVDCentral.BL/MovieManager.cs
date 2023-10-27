@@ -213,7 +213,7 @@ namespace GV.DVDCentral.BL
             }
         }
 
-        public static List<Movie> Load()
+        public static List<Movie> Load(int? genreId = null)
         {
 
             try
@@ -222,29 +222,34 @@ namespace GV.DVDCentral.BL
                 using (DVDCentralEntities dc = new DVDCentralEntities()) // Blocked Scope
                 {
                     (from m in dc.tblMovies
-                     join to in dc.tblOrderItems on m.Id equals to.Id
+
+                     join mg in dc.tblMovieGenres on m.Id equals mg.MovieId
+
                      join r in dc.tblRatings on m.RatingId equals r.Id
                      join f in dc.tblFormats on m.FormatId equals f.Id
                      join d in dc.tblDirectors on m.DirectorId equals d.Id
+                     where mg.GenreId == genreId || genreId == null
                      select new
                      {
-
+                         m.Id,
                          m.Title,
                          m.Cost,
-                         to.Quantity,
+                         m.InStkQty,
                          Rating = r.Description,
                          Format = f.Description,
                          DirectorFullName = d.FirstName + " " + d.LastName
                          
 
-                     }).ToList()
+                     }).Distinct().ToList()
+
                      .ForEach(movie => list.Add(new Movie
                      {
 
-
+                         Id = movie.Id,
+                        
                          Title = movie.Title,
                          Cost = movie.Cost,
-                         Quantity = movie.Quantity, 
+                         InStkQty = movie.InStkQty, 
                          Rating = movie.Rating,     
                          Format = movie.Format,     
                          DirectorFullName = movie.DirectorFullName,
@@ -252,14 +257,7 @@ namespace GV.DVDCentral.BL
 
 
 
-                            /*  Title = movie.Title,
-                                Cost = movie.Cost,
-                                Description = movie.Format,
-                                InStkQty = movie.Quantity,
-
-                                DirectorFullName = movie.DirectorFullName*/
-
-
+                  
 
                      }));
                 }

@@ -231,6 +231,37 @@ namespace GV.DVDCentral.BL
 
         }
 
+        public static List<OrderItem> LoadByOderId(int orderId)
+        {
+            try
+            {
+                using(DVDCentralEntities dc = new DVDCentralEntities())
+                {
+                    List<OrderItem> orderItems = new List<OrderItem>();
 
+                    var entities = dc.tblOrderItems.Where(item => item.OrderId == orderId).ToList();
+
+                    foreach (var entity in entities)
+                    {
+                        orderItems.Add(new OrderItem
+                        {
+                            Id = entity.Id,
+                            OrderId = entity.OrderId,
+                            Quantity = entity.Quantity,
+                            MovieId = entity.MovieId,
+                            Cost = entity.Cost
+
+                        });
+                    }
+                    return orderItems;
+                }
+            }
+
+            catch(Exception)
+            {
+                throw;
+            }
+
+         }
     }
 }

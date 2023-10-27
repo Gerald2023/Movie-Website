@@ -33,6 +33,62 @@ namespace GV.DVDCentral.BL.Test
             Assert.AreEqual(1, results);
         }
 
+
+        [TestMethod]
+        public void InsertOrderItemsTest()
+        {
+            Order order = new Order
+            {
+                CustomerId = 99,
+                OrderDate = DateTime.Now,
+                UserId = 99,
+                ShipDate = DateTime.Now,
+                OrderItems = new List<OrderItem>()
+                {
+                    new OrderItem
+                    {
+                        Id = 88,
+                        MovieId = 1,
+                        Cost = 9.99,
+                        Quantity = 9
+                    },
+                    new OrderItem
+                    {
+                        Id = 88,
+                        MovieId = 2,
+                        Cost = 9.99,
+                        Quantity = 9,
+                        OrderId=4
+
+                    }
+                }
+
+            };
+
+
+            int result = OrderManager.Insert(order, true);
+            Assert.AreEqual(order.OrderItems[1].OrderId, order.Id);
+            Assert.AreEqual(3, result);
+        }
+
+        [TestMethod]
+        public void LoadByIdTest()
+        {
+            int id = OrderManager.Load().LastOrDefault().Id;
+            Order order = OrderManager.LoadById(id);
+            Assert.AreEqual(order.Id, id);
+            Assert.IsTrue(order.OrderItems.Count > 0);
+        }
+
+
+        [TestMethod]
+        public void LoadByIdCustomerIdTest()
+        {
+            int customerId = OrderManager.Load().FirstOrDefault().CustomerId;
+
+            Assert.AreEqual(OrderManager.LoadById(customerId).CustomerId, customerId);
+        }
+
         [TestMethod]
         public void UpdateTest()
         {
@@ -47,6 +103,7 @@ namespace GV.DVDCentral.BL.Test
         {
             int results = OrderManager.Delete(3, true);
             Assert.AreEqual(1, results);
+
         }
     }
 

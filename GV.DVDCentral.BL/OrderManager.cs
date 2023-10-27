@@ -1,12 +1,15 @@
 ﻿using GV.DVDCentral.BL.Models;
 using GV.DVDCentral.PL;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.VisualStudio.Web.CodeGeneration.Design;
 
 namespace GV.DVDCentral.BL
 {
     public static class OrderManager
     {
-        public static int Insert(int customerId, int userId, ref int id, bool rollback = false)
+        public static int Insert(int customerId, 
+                                int userId, ref int id,
+                                bool rollback = false)
         {
             try
             {
@@ -17,7 +20,7 @@ namespace GV.DVDCentral.BL
                     order.UserId = userId;
                     order.ShipDate = DateTime.Now;
 
-                        
+
                 };
 
                 int results = Insert(order, rollback);
@@ -35,14 +38,11 @@ namespace GV.DVDCentral.BL
             
         }
 
-        public static int Insert(Order order, bool rollback = false)
+        public static int Insert(Order order, bool rollback = false) // Id by reference
         {
-
-
             try
             {
                 int results = 0;
-
                 using (DVDCentralEntities dc = new DVDCentralEntities())
                 {
                     IDbContextTransaction transaction = null;
@@ -50,32 +50,33 @@ namespace GV.DVDCentral.BL
 
                     tblOrder entity = new tblOrder();
                     entity.Id = dc.tblOrders.Any() ? dc.tblOrders.Max(s => s.Id) + 1 : 1;
-
                     entity.CustomerId = order.CustomerId;
-                    entity.OrderDate = DateTime.Now;
+                    entity.OrderDate = order.OrderDate;
                     entity.UserId = order.UserId;
-                    entity.ShipDate = DateTime.Now;
+                    entity.ShipDate = order.ShipDate;
 
-        
+                    // Inserts OrderItems objects into the list at Order
+                    foreach (OrderItem orderItem in order.OrderItems)
+                    {
+                        // set the orderId on tblOrderItem
+                        //orderItem.OrderId = order.Id;
+                        results += OrderItemManager.Insert(orderItem, rollback);
+                    }
 
+                    //entity.OrderItems = order.OrderItems;   
 
-                    //IMPORTANT - BACK FILL THE ID
+                    // IMPORTANT - BACK FILL THE ID 
                     order.Id = entity.Id;
 
                     dc.tblOrders.Add(entity);
-                    results = dc.SaveChanges();
+                    results += dc.SaveChanges(); // Make sure to add the += and not only =
 
                     if (rollback) transaction.Rollback();
                 }
-
                 return results;
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            catch (Exception) { throw; }
         }
-
         public static int Update(Order order, bool rollback = false)
         {
             try
@@ -165,11 +166,26 @@ namespace GV.DVDCentral.BL
             try
             {
 
-
                 using (DVDCentralEntities dc = new DVDCentralEntities())
                 {
-                    tblOrder entity = dc.tblOrders.FirstOrDefault(d => d.Id == id);
-                    if (entity != null)
+
+                    var entity = (from d in dc.tblOrders
+                                  join oi in dc.tblOrderItems on d.Id equals oi.OrderId
+                                  where oi.OrderId == id
+                                  select new
+                                  {
+
+                                      d.Id,
+                                      d.CustomerId,
+                                      d.UserId,
+                                      d.OrderDate,
+                                      d.ShipDate
+
+                                  }).FirstOrDefault();
+
+/*                    tblOrder entity = dc.tblOrders.FirstOrDefault(d => d.Id == id);
+*/
+                      if (entity != null)
                     {
                         return new Order
                         {
@@ -179,6 +195,10 @@ namespace GV.DVDCentral.BL
                             OrderDate = entity.OrderDate,
                             UserId = entity.UserId,
                             ShipDate = entity.ShipDate,
+                            OrderItems = OrderItemManager.LoadByOderId(id)
+
+
+
                         };
                     }
                     else
@@ -195,7 +215,10 @@ namespace GV.DVDCentral.BL
             }
         }
 
-        public static List<Order> Load()
+
+
+
+        public static List<Order> Load(int? CustomerId = null)
         {
 
             try
@@ -204,6 +227,9 @@ namespace GV.DVDCentral.BL
                 using (DVDCentralEntities dc = new DVDCentralEntities()) // Blocked Scope
                 {
                     (from d in dc.tblOrders
+                     join oi in dc.tblOrderItems on d.Id equals oi.Id
+                     join c in dc.tblCustomers on d.CustomerId equals c.Id
+                     where d.CustomerId == CustomerId || CustomerId == null
                      select new
                      {
                          d.Id,
@@ -211,8 +237,8 @@ namespace GV.DVDCentral.BL
                          d.UserId,
                          d.OrderDate,
                          d.ShipDate,
-                         
-                         
+
+
                      })
                      .ToList()
                      .ForEach(order => list.Add(new Order
