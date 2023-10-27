@@ -7,6 +7,7 @@ namespace GV.DVDCentral.UI.Controllers
     {
         public IActionResult Index()
         {
+            ViewBag.Title = "Ratings";
             return View(RatingManager.Load());
         }
 

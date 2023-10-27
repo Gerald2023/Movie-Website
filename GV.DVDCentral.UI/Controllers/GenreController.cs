@@ -7,11 +7,14 @@ namespace GV.DVDCentral.UI.Controllers
     {
         public IActionResult Index()
         {
+            ViewBag.Title = "List of All Genres";
             return View(GenreManager.Load());
         }
 
         public IActionResult Details(int id)
         {
+            var item = GenreManager.LoadById(id);
+            ViewBag.Title = "Details for" + item.Description;
             return View(GenreManager.LoadById(id));
         }
 

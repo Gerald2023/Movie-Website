@@ -21,8 +21,12 @@ body {
   margin-bottom: 60px;
 }
 
+
+
 .bg-dark {
-    background: linear-gradient(90deg, rgba(3, 65, 81, 1) 0%, rgba(148, 234, 169, 1) 35%)
+ 
+    background: #337A71;
+    background: linear-gradient(90deg, #337A71, #47E7D8);
 }
 
 .card-img {
@@ -30,4 +34,48 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+.header {
+    margin: 0px;
+    padding: 0px;
+    background-color: rgba(3, 65, 81, 1);
+}
+
+.header h1, .header h2, .header h3, .header h4, .header h5 {
+    margin: 0px;
+    padding: 0px;
+    color: white;
+    font-family: 'Trebuchet MS', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.main {
+    margin: 0px;
+    padding: 0px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.sidebar {
+    margin: 0px 10px 0px 10px;
+    min-height: 500px;
+    padding-left: 0px;
+    padding-right: 0px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+    .sidebar ul {
+        list-style-type: none;
+        padding-left: 5px;
+        padding-right: 0px;
+    }
+
+.table th {
+    background-color: rgba(3, 65, 81, 1);
+    color: white;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
 }

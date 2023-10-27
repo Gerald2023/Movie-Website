@@ -23,7 +23,8 @@ namespace GV.DVDCentral.BL.Models
 
         public int DirectorId { get; set; }
 
-        
+        [DisplayName("Quantity")]
+
         public int InStkQty { get; set; }
 
         public string? ImagePath { get; set; }
