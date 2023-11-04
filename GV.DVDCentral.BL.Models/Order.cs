@@ -19,7 +19,9 @@ namespace GV.DVDCentral.BL.Models
         public DateTime ShipDate { get; set; }
 
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
-
-
+        public int Quantity { get; set; }
+        public int OrderItemsId { get; set; }
+        public int MovieId { get; set; }
+        public double Cost { get; set; }
     }
 }

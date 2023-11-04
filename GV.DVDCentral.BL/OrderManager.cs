@@ -179,7 +179,11 @@ namespace GV.DVDCentral.BL
                                       d.CustomerId,
                                       d.UserId,
                                       d.OrderDate,
-                                      d.ShipDate
+                                      d.ShipDate,
+                                      OrderItemsId = oi.Id,
+                                      oi.MovieId, 
+                                      oi.Quantity,
+                                      oi.Cost
 
                                   }).FirstOrDefault();
 
@@ -195,7 +199,13 @@ namespace GV.DVDCentral.BL
                             OrderDate = entity.OrderDate,
                             UserId = entity.UserId,
                             ShipDate = entity.ShipDate,
-                            OrderItems = OrderItemManager.LoadByOderId(id)
+                            OrderItems = OrderItemManager.LoadByOrderId(id),
+                            OrderItemsId = entity.OrderItemsId,
+                            MovieId = entity.MovieId,
+                            Quantity = entity.Quantity,
+                            Cost = entity.Cost
+
+
 
 
 
@@ -227,16 +237,18 @@ namespace GV.DVDCentral.BL
                 using (DVDCentralEntities dc = new DVDCentralEntities()) // Blocked Scope
                 {
                     (from d in dc.tblOrders
-                     join oi in dc.tblOrderItems on d.Id equals oi.Id
+                     //join oi in dc.tblOrderItems on d.Id equals oi.Id
                      join c in dc.tblCustomers on d.CustomerId equals c.Id
                      where d.CustomerId == CustomerId || CustomerId == null
                      select new
                      {
                          d.Id,
-                         d.CustomerId,
-                         d.UserId,
                          d.OrderDate,
                          d.ShipDate,
+
+                         d.CustomerId,
+                         d.UserId,
+                      
 
 
                      })
@@ -244,10 +256,14 @@ namespace GV.DVDCentral.BL
                      .ForEach(order => list.Add(new Order
                      {
                         Id = order.Id,
-                        CustomerId = order.CustomerId,
+                         OrderDate = order.OrderDate,
+                         ShipDate = order.ShipDate,
+
+                         CustomerId = order.CustomerId,
                         UserId = order.UserId,
-                        OrderDate = order.OrderDate,
-                        ShipDate = order.ShipDate
+                        OrderItems = OrderItemManager.LoadByOrderId(order.Id)
+                        
+                        
 
                      }));
                 }
@@ -261,6 +277,8 @@ namespace GV.DVDCentral.BL
             }
 
         }
+
+
 
 
     }

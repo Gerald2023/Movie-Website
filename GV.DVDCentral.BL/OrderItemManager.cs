@@ -231,29 +231,51 @@ namespace GV.DVDCentral.BL
 
         }
 
-        public static List<OrderItem> LoadByOderId(int orderId)
+        public static List<OrderItem> LoadByOrderId(int orderId)
         {
             try
-            {
+            {   
+                List<OrderItem> list = new List<OrderItem>();
+
                 using(DVDCentralEntities dc = new DVDCentralEntities())
                 {
-                    List<OrderItem> orderItems = new List<OrderItem>();
 
-                    var entities = dc.tblOrderItems.Where(item => item.OrderId == orderId).ToList();
 
-                    foreach (var entity in entities)
-                    {
-                        orderItems.Add(new OrderItem
-                        {
-                            Id = entity.Id,
-                            OrderId = entity.OrderId,
-                            Quantity = entity.Quantity,
-                            MovieId = entity.MovieId,
-                            Cost = entity.Cost
+                    /*                    var entities = dc.tblOrderItems.Where(item => item.OrderId == orderId).ToList();
 
-                        });
-                    }
-                    return orderItems;
+                                        foreach (var entity in entities)
+                                        {
+                                            orderItems.Add(new OrderItem
+                                            {
+                                                Id = entity.Id,
+                                                OrderId = entity.OrderId,
+                                                Quantity = entity.Quantity,
+                                                MovieId = entity.MovieId,
+                                                Cost = entity.Cost
+
+                                            });
+                                        }*/
+
+                    (from s in dc.tblOrderItems
+                     where s.OrderId == orderId
+                     select new
+                     {
+                         s.Id,
+                         s.OrderId,
+                         s.Quantity,
+                         s.MovieId,
+                         s.Cost
+                     })
+                     .ToList()
+                     .ForEach(orderItem => list.Add(new OrderItem
+                     {
+                         Id = orderItem.Id,
+                         OrderId = orderItem.OrderId,
+                         Quantity = orderItem.Quantity,
+                         MovieId = orderItem.MovieId,
+                         Cost = orderItem.Cost
+                     }));
+                    return list;
                 }
             }
 

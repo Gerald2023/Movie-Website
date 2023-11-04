@@ -26,6 +26,8 @@ namespace GV.DVDCentral.BL.Test
             {
                 CustomerId = -98,
                 UserId = -99,
+                OrderDate = DateTime.Now,
+                ShipDate = DateTime.Now
 
             };
 
