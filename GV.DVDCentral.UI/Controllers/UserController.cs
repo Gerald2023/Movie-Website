@@ -1,4 +1,5 @@
 ﻿using GV.DVDCentral.BL;
+using GV.DVDCentral.BL.Models;
 using GV.DVDCentral.UI.Extensions;
 using GV.DVDCentral.UI.Models;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -29,6 +30,8 @@ namespace GV.DVDCentral.UI.Controllers
 
             }
         }
+
+
 
 
         //clean the session

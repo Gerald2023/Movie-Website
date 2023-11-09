@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Http;
+﻿@using GV.DVDCentral.UI.Extensions;
+@using Microsoft.AspNetCore.Http;
 @inject IHttpContextAccessor HttpContextAccessor
 
 
@@ -53,9 +54,29 @@
                                 var fullname = HttpContextAccessor.HttpContext?.Session.GetString("fullname");
                                 if (fullname != null) fullname = fullname.Replace("\"", "");
 
+
+                               
                             }
+
                             <a class="nav-link text-light">@fullname</a>
+
                         </li>
+
+                        <li class="nav-item">
+                            @if (HttpContextAccessor.HttpContext?.Session.GetObject<User>("user") != null) // if the user is not in session show the links
+                            {
+                                <a asp-controller="User" asp-action="Logout" class="nav-link text-light">Logout</a>
+                                <a asp-controller="User" asp-action="Browse2" class="nav-link text-light">My user information</a>
+
+                            }
+                            else
+                            {
+
+                                <a asp-controller="User" asp-action="Login" class="nav-link text-light">Login</a> 
+
+                            }
+                        </li>
+
                     </ul>
                 </div>
             </div>
