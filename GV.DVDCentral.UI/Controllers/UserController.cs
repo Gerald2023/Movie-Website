@@ -73,6 +73,14 @@ namespace GV.DVDCentral.UI.Controllers
         }
 
 
+        public IActionResult Seed()
+        {
+
+            UserManager.Seed();
+            return View();
+        }
+
+
         //user sign up feature 
         public IActionResult Create()
         {

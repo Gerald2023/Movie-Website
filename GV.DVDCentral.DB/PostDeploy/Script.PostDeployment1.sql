@@ -19,7 +19,7 @@ Post-Deployment Script Template
 :r .\DefaultData\OrderItems.sql
 :r .\DefaultData\Orders.sql
 :r .\DefaultData\Ratings.sql
-:r .\DefaultData\Users.sql
+
 
 
 
