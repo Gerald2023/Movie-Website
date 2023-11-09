@@ -80,4 +80,6 @@ body {
     background-color: #f2f2f2;
 }
 
-
+.dropdown-toggle {
+    background-color: #337A71;
+}

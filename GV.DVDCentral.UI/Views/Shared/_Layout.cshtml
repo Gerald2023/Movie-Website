@@ -48,28 +48,30 @@
                     </ul>
 
 
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            @{
+                                GV.DVDCentral.BL.UserManager.Seed();
+                                var fullname = HttpContextAccessor.HttpContext?.Session.GetString("fullname");
+                                if (fullname != null) fullname = fullname.Replace("\"", "");
+                            }
+                            <a class="nav-link text-light">@fullname</a>
+                        </li>
+                    </ul>
 
-                    <div class="dropBtnColor navbar-nav ms-auto">
+                    <div class="userDropDown navbar-nav ms-auto">
                         <div class="nav-item dropdown">
                             <a class="text-light btn btn-secondary dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Let's Get Started
                             </a>
 
                             <ul class="dropdown-menu">
-                                <li class="nav-item">
-                                    @{
-                                        GV.DVDCentral.BL.UserManager.Seed();
-                                        var fullname = HttpContextAccessor.HttpContext?.Session.GetString("fullname");
-                                        if (fullname != null) fullname = fullname.Replace("\"", "");
-                                    }
 
-                                    <a class="dropdown-item nav-link">@fullname</a>
-                                </li>
 
                                 <li class="nav-item">
                                     @if (HttpContextAccessor.HttpContext?.Session.GetObject<User>("user") != null)
                                     {
-                                        <a asp-controller="User" asp-action="Logout" class="dropdown-item nav-link ">Logout</a>
+                                        <a asp-controller="User" asp-action="Logout" class="dropdown-item nav-link ">Log out</a>
                                         <a asp-controller="User" asp-action="Browse2" class="dropdown-item nav-link">My user information</a>
                                     }
                                     else
