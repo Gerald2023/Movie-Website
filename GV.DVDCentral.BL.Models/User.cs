@@ -16,5 +16,8 @@ namespace GV.DVDCentral.BL.Models
 
         public string? UserName { get; set; }
         public string? Password { get; set; }
+
+        public string FullName { get { return FirstName + " " + LastName; } }
+
     }
 }

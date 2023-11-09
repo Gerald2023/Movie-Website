@@ -1,4 +1,6 @@
 ﻿using GV.DVDCentral.BL;
+using GV.DVDCentral.UI.Models;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GV.DVDCentral.UI.Controllers
@@ -21,7 +23,15 @@ namespace GV.DVDCentral.UI.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            ViewBag.Title = "Create a Program";
+            if (Authenticate.IsAuthenticated(HttpContext))
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "User", new { returnUrl = UriHelper.GetDisplayUrl(HttpContext.Request) });
+            }
         }
 
         [HttpPost]
@@ -43,7 +53,14 @@ namespace GV.DVDCentral.UI.Controllers
 
         public IActionResult Edit(int id)
         {
-            return View(OrderManager.LoadById(id));
+            if (Authenticate.IsAuthenticated(HttpContext))
+            {
+                return View(OrderManager.LoadById(id));
+            }
+            else
+            {
+                return RedirectToAction("Login", "User", new { returnUrl = UriHelper.GetDisplayUrl(HttpContext.Request) });
+            }
         }
 
         [HttpPost]
