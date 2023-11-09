@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,9 @@ namespace GV.DVDCentral.BL.Models
         public string? LastName { get; set; }
 
         public string? UserName { get; set; }
+
         public string? Password { get; set; }
+        [DisplayName("Full Name")]
 
         public string FullName { get { return FirstName + " " + LastName; } }
 

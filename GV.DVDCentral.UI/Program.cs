@@ -3,6 +3,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//add the ability to access http context
+builder.Services.AddHttpContextAccessor();
 
 //Kepp session
 
