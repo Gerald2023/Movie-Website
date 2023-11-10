@@ -237,7 +237,7 @@ namespace GV.DVDCentral.BL
                 using (DVDCentralEntities dc = new DVDCentralEntities()) // Blocked Scope
                 {
                     (from d in dc.tblOrders
-                     //join oi in dc.tblOrderItems on d.Id equals oi.Id
+                     join oi in dc.tblOrderItems on d.Id equals oi.Id
                      join c in dc.tblCustomers on d.CustomerId equals c.Id
                      where d.CustomerId == CustomerId || CustomerId == null
                      select new
@@ -245,10 +245,13 @@ namespace GV.DVDCentral.BL
                          d.Id,
                          d.OrderDate,
                          d.ShipDate,
-
                          d.CustomerId,
                          d.UserId,
-                      
+                         OrderItemsId = oi.Id,
+                         oi.MovieId,
+                         oi.Quantity,
+                         oi.Cost
+
 
 
                      })
@@ -256,14 +259,17 @@ namespace GV.DVDCentral.BL
                      .ForEach(order => list.Add(new Order
                      {
                         Id = order.Id,
-                         OrderDate = order.OrderDate,
-                         ShipDate = order.ShipDate,
+                        OrderDate = order.OrderDate,
+                        ShipDate = order.ShipDate,
 
-                         CustomerId = order.CustomerId,
+                        CustomerId = order.CustomerId,
                         UserId = order.UserId,
-                        OrderItems = OrderItemManager.LoadByOrderId(order.Id)
-                        
-                        
+                        OrderItems = OrderItemManager.LoadByOrderId(order.Id),
+                        OrderItemsId = order.OrderItemsId,
+                        MovieId = order.MovieId,
+                        Quantity = order.Quantity,
+                        Cost = order.Cost
+
 
                      }));
                 }
